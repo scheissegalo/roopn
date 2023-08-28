@@ -16,21 +16,6 @@ jobs:
   - run: pip install mypy
   - run: flake8 run.py roop
   - run: mypy run.py roop
- test:
-  strategy:
-   matrix:
-    os: [windows-latest]
-  runs-on: ${{ matrix.os }}
-  steps:
-  - name: Checkout
-    uses: actions/checkout@v2
-  - name: Set up ffmpeg
-    uses: FedericoCarboni/setup-ffmpeg@v2
-  - name: Set up Python 3.9
-    uses: actions/setup-python@v2
-    with:
-     python-version: 3.9
-  - run: pip install -r requirements-headless.txt
  build:
   runs-on: ubuntu-latest
   steps:
@@ -42,7 +27,7 @@ jobs:
       filename: 'release.zip'
       exclusions: '*.git* /*node_modules/* .editorconfig'
   - name: Upload Release
-    uses: scheissegalo/roopn@v1.12.0
+    uses: actions/checkout@master
     with:
       artifacts: "release.zip"
       token: ${{ secrets.GH_TOKEN }}
