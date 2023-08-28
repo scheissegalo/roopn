@@ -1,43 +1,39 @@
 name: Publish on push
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  lint:
+  build_and_create_release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+
       - run: pip install flake8
       - run: pip install mypy
       - run: flake8 run.py roop
       - run: mypy run.py roop
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Zip source code
         run: |
           mkdir -p release
           zip -r release/source-code.zip .
+
       - name: Upload release asset
         uses: actions/upload-artifact@v2
         with:
           name: source-code
           path: release/source-code.zip
 
-  create_release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: List contents of the release directory
-        run: ls -R release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -48,6 +44,7 @@ jobs:
           release_name: Release ${{ github.sha }}
           draft: false
           prerelease: false
+
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
