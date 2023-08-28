@@ -1,4 +1,4 @@
-name: ci
+name: Publish on push
 
 on: [ push, pull_request ]
 
@@ -31,3 +31,18 @@ jobs:
     with:
      python-version: 3.9
   - run: pip install -r requirements-headless.txt
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        filename: 'release.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+    - name: Upload Release
+      uses: scheissegalo/roopn@v1.12.0
+      with:
+        artifacts: "release.zip"
+        token: ${{ secrets.GH_TOKEN }}
