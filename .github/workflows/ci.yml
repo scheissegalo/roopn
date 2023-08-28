@@ -36,6 +36,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: List contents of the release directory
+        run: ls -R release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
