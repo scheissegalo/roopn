@@ -8,7 +8,8 @@ on:
 jobs:
   build_and_create_release:
     runs-on: ubuntu-latest
-
+    env:
+      TAG_NAME: v1.1.2
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,8 +41,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          tag_name: v1.1.1
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: Release ${{ env.TAG_NAME }}
           draft: false
           prerelease: false
 
